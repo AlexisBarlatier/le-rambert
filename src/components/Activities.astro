@@ -9,69 +9,67 @@ interface Props {
 const { activites } = Astro.props;
 ---
 
-<section id="activites" class="activities">
-  <h2>Découvrir le Périgord Noir</h2>
-  <div class="activities-grid">
-    {activites.map(({ titre, items }) => (
-      <div class="category">
-        <h3>{titre}</h3>
-        <ul>
-          {items.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </div>
-    ))}
+<section class="perigord" id="perigord">
+  <div class="perigord-inner">
+    <p class="section-tag">À découvrir</p>
+    <h2 class="section-title">Le Périgord <em>Noir</em></h2>
+    <p class="section-lead">Un patrimoine exceptionnel à portée de main.</p>
+    <div class="perigord-cols">
+      {activites.map(({ titre, items }) => (
+        <div class="perigord-col" data-animate>
+          <h3>{titre}</h3>
+          <ul>
+            {items.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
   </div>
 </section>
 
 <style>
-  .activities {
+  .perigord {
     padding: 6rem 2rem;
-    text-align: center;
+    background: linear-gradient(180deg, var(--color-bg), var(--color-warm-white, #FFFCF8));
   }
 
-  .activities h2 {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    margin-bottom: 3rem;
-    font-weight: 400;
-  }
-
-  .activities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2.5rem;
-    max-width: 900px;
+  .perigord-inner {
+    max-width: 1100px;
     margin: 0 auto;
-    text-align: left;
   }
 
-  .category h3 {
+  .perigord-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+  }
+
+  .perigord-col h3 {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: 400;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-text);
     margin-bottom: 1rem;
-    color: var(--color-accent);
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--color-stone);
   }
 
-  .category ul {
+  .perigord-col ul {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
   }
 
-  .category li {
-    padding-left: 1rem;
-    position: relative;
+  .perigord-col li {
     font-size: 0.95rem;
+    color: var(--color-accent);
+    padding: 0.5rem 0;
+    padding-left: 1.2rem;
+    position: relative;
   }
 
-  .category li::before {
+  .perigord-col li::before {
     content: '—';
     position: absolute;
     left: 0;
-    color: var(--color-light);
+    color: var(--color-gold);
   }
 </style>

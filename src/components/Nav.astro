@@ -1,0 +1,117 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const [before, last] = [title.split(' ').slice(0, -1).join(' '), title.split(' ').pop()];
+---
+
+<nav id="nav">
+  <div class="nav-brand">{before} <span>{last}</span></div>
+  <ul class="nav-links">
+    <li><a href="#espaces">Espaces</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#commodites">Commodités</a></li>
+    <li><a href="#perigord">Périgord</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Réserver</button>
+</nav>
+
+<style>
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250, 246, 241, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(212, 197, 178, 0.3);
+    transition: all 0.4s;
+  }
+
+  nav.scrolled {
+    padding: 0.8rem 3rem;
+    box-shadow: 0 2px 30px rgba(30, 21, 16, 0.06);
+  }
+
+  .nav-brand {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-brand span {
+    color: var(--color-gold);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--color-accent);
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-gold);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-gold);
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.8rem;
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .nav-cta:hover {
+    background: var(--color-gold);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav?.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>

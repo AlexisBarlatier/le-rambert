@@ -16,82 +16,109 @@ const { tarifs } = Astro.props;
 const formatPrice = (n: number) => n.toLocaleString('fr-FR');
 ---
 
-<section id="tarifs" class="pricing">
-  <h2>Tarifs</h2>
-  <div class="pricing-cards">
-    <div class="card">
-      <div class="price">{formatPrice(tarifs.semaine)} €</div>
-      <div class="unit">par semaine</div>
+<section id="tarifs" class="tarifs">
+  <p class="section-tag">Tarifs</p>
+  <h2 class="section-title">Séjournez chez <em>nous</em></h2>
+  <div class="tarifs-flex">
+    <div class="tarif-block featured" data-animate>
+      <div class="tarif-price">{formatPrice(tarifs.semaine)} €</div>
+      <div class="tarif-unit">par semaine</div>
     </div>
-    <div class="card">
-      <div class="price">{formatPrice(tarifs.nuit)} €</div>
-      <div class="unit">par nuit</div>
-      <div class="note">Minimum {tarifs.nuit_minimum} nuits</div>
+    <div class="tarif-block" data-animate>
+      <div class="tarif-price">{formatPrice(tarifs.nuit)} €</div>
+      <div class="tarif-unit">par nuit</div>
+      <div class="tarif-note">Minimum {tarifs.nuit_minimum} nuits</div>
     </div>
   </div>
-  <div class="menage">
-    <p><strong>Forfait ménage obligatoire : {formatPrice(tarifs.menage.prix)} € TTC</strong></p>
+  <div class="tarifs-mention">
+    <strong>Forfait ménage obligatoire : {formatPrice(tarifs.menage.prix)} € TTC</strong>
     <p>{tarifs.menage.description}</p>
   </div>
 </section>
 
 <style>
-  .pricing {
-    padding: 6rem 2rem;
+  .tarifs {
+    background: var(--color-text);
+    color: var(--color-bg);
     text-align: center;
+    padding: 6rem 2rem;
   }
 
-  .pricing h2 {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    margin-bottom: 3rem;
-    font-weight: 400;
+  .tarifs :global(.section-tag) {
+    color: var(--color-gold-light);
   }
 
-  .pricing-cards {
+  .tarifs :global(.section-title) {
+    color: var(--color-bg);
+  }
+
+  .tarifs :global(.section-title em) {
+    color: var(--color-light);
+  }
+
+  .tarifs-flex {
     display: flex;
     justify-content: center;
     gap: 3rem;
+    margin: 3rem auto 2.5rem;
     flex-wrap: wrap;
-    margin-bottom: 2.5rem;
   }
 
-  .card {
+  .tarif-block {
     padding: 2.5rem 3rem;
-    border: 1px solid var(--color-light);
+    border: 1px solid rgba(212, 197, 178, 0.15);
+    min-width: 240px;
   }
 
-  .price {
+  .tarif-block.featured {
+    border-color: var(--color-gold);
+    background: rgba(184, 150, 90, 0.06);
+  }
+
+  .tarif-price {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    color: var(--color-accent);
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--color-gold-light);
+    line-height: 1;
   }
 
-  .unit {
-    margin-top: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.8rem;
-  }
-
-  .note {
-    margin-top: 0.5rem;
+  .tarif-unit {
     font-size: 0.85rem;
-    color: #888;
-    font-style: italic;
-  }
-
-  .menage {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    background: white;
-    border: 1px solid var(--color-light);
-    font-size: 0.9rem;
-  }
-
-  .menage p + p {
+    color: var(--color-light);
     margin-top: 0.5rem;
-    color: #666;
+  }
+
+  .tarif-note {
+    font-size: 0.78rem;
+    color: var(--color-taupe);
+    margin-top: 0.3rem;
+  }
+
+  .tarifs-mention {
+    max-width: 550px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(212, 197, 178, 0.12);
+  }
+
+  .tarifs-mention strong {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--color-light);
+  }
+
+  .tarifs-mention p {
+    font-size: 0.85rem;
+    color: var(--color-taupe);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .tarifs-flex { gap: 1.5rem; }
+    .tarif-block { padding: 2rem; min-width: auto; width: 100%; max-width: 300px; }
   }
 </style>

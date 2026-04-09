@@ -62,7 +62,9 @@ const colsPiscine = optimizeGrid(piscine);
 ---
 
 <section id="galerie" class="gallery">
-  <h2>Le lieu</h2>
+  <p class="section-tag">Galerie</p>
+  <h2 class="section-title">Le <em>lieu</em></h2>
+  <p class="section-lead">Parc, terrasses et vue sur le château de Fénelon.</p>
 
   {exterieur.length > 0 && (
     <div class="gallery-grid" style={`--cols: ${colsExterieur}`}>
@@ -94,17 +96,28 @@ const colsPiscine = optimizeGrid(piscine);
 
 <style>
   .gallery {
+    background: var(--color-deep);
     padding: 6rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+  }
+
+  .gallery :global(.section-tag) {
     text-align: center;
   }
 
-  .gallery h2 {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    margin-bottom: 3rem;
-    font-weight: 400;
+  .gallery :global(.section-title) {
+    color: var(--color-bg);
+    text-align: center;
+  }
+
+  .gallery :global(.section-title em) {
+    color: var(--color-light);
+  }
+
+  .gallery :global(.section-lead) {
+    color: var(--color-light);
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .gallery h3 {
@@ -112,7 +125,13 @@ const colsPiscine = optimizeGrid(piscine);
     font-size: 1.4rem;
     font-weight: 400;
     margin: 3rem 0 1.5rem;
-    color: var(--color-accent);
+    color: var(--color-bg);
+    text-align: center;
+  }
+
+  .gallery-grid {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .gallery-grid {

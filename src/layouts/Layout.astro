@@ -18,25 +18,37 @@ const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Pér
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
   <body>
     <slot />
     <Lightbox />
+    <footer>
+      <p>La Maison du Rambert — Périgord Noir, Dordogne</p>
+    </footer>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --color-bg: #faf9f6;
-    --color-text: #2c2c2c;
-    --color-accent: #8b7355;
-    --color-light: #d4c5a9;
-    --font-heading: 'Georgia', serif;
-    --font-body: system-ui, -apple-system, sans-serif;
+    --color-bg: #FAF6F1;
+    --color-warm-white: #FFFCF8;
+    --color-text: #3D2E21;
+    --color-accent: #6B5744;
+    --color-light: #D4C5B2;
+    --color-stone: #E8E0D6;
+    --color-taupe: #9C8B7A;
+    --color-deep: #1E1510;
+    --color-gold: #B8965A;
+    --color-gold-light: #D4B87C;
+    --font-heading: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
   }
 
-  * {
+  *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -48,9 +60,12 @@ const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Pér
 
   body {
     font-family: var(--font-body);
+    font-weight: 300;
     color: var(--color-text);
     background-color: var(--color-bg);
-    line-height: 1.6;
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
   }
 
   img {
@@ -62,4 +77,80 @@ const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Pér
   a {
     color: var(--color-accent);
   }
+
+  /* Section common styles */
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--color-accent);
+  }
+
+  .section-lead {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-taupe);
+    max-width: 550px;
+    margin-bottom: 3rem;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--color-stone);
+  }
+
+  footer p {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--color-taupe);
+    font-weight: 300;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    section { padding: 4rem 1.5rem; }
+  }
 </style>
+
+<script>
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('[data-animate]').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>

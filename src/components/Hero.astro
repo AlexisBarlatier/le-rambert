@@ -9,74 +9,145 @@ interface Props {
 }
 const { title, subtitle, location } = Astro.props;
 
-// Trouver la première image dans hero/
 const heroDir = path.resolve('public/photos/hero');
 const heroFiles = fs.existsSync(heroDir)
   ? fs.readdirSync(heroDir).filter(f => /\.(jpe?g|png|webp)$/i.test(f)).sort()
   : [];
 const heroImage = heroFiles.length > 0 ? `/photos/hero/${heroFiles[0]}` : null;
+
+const words = title.split(' ');
+const lastWord = words.pop();
+const rest = words.join(' ');
 ---
 
-<section id="hero" class="hero" style={heroImage ? `background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('${heroImage}')` : undefined}>
+<section id="hero" class="hero" style={heroImage ? `background: linear-gradient(180deg, rgba(250,246,241,0) 0%, rgba(250,246,241,0.4) 50%, var(--color-bg) 100%), url('${heroImage}') center/cover no-repeat` : undefined}>
+  <div class="hero-overlay"></div>
   <div class="hero-content">
-    <h1>{title}</h1>
-    <p class="tagline">{subtitle}</p>
-    <p class="location">{location}</p>
-    <a href="#contact" class="cta">Réserver</a>
+    <p class="hero-tag">Location de vacances en Dordogne</p>
+    <h1>{rest} <em>{lastWord}</em></h1>
+    <p class="hero-sub">{subtitle}</p>
+    <p class="hero-location">{location}</p>
+    <a href="#contact" class="hero-btn">Réserver votre séjour</a>
   </div>
+  <div class="scroll-hint"><span></span></div>
 </section>
 
 <style>
   .hero {
-    position: relative;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    background-color: var(--color-accent);
-    background-size: cover;
-    background-position: center;
-    color: white;
+    align-items: center;
     text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-accent);
   }
 
-  .hero-content h1 {
-    font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 7vw, 5rem);
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(30, 21, 16, 0.25);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  .hero-tag {
+    font-size: 0.72rem;
     font-weight: 400;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-gold-light);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
   }
 
-  .tagline {
-    font-size: clamp(1rem, 2.5vw, 1.5rem);
+  h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 7vw, 5.5rem);
     font-weight: 300;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
+    line-height: 1.1;
+    color: #FFFCF8;
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
   }
 
-  .location {
-    font-size: clamp(0.85rem, 2vw, 1.1rem);
+  h1 em {
+    font-style: italic;
     font-weight: 300;
+    color: var(--color-gold-light);
+  }
+
+  .hero-sub {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.6rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+  }
+
+  .hero-location {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     margin-bottom: 2.5rem;
-    opacity: 0.7;
-    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1s 0.85s forwards;
   }
 
-  .cta {
+  .hero-btn {
     display: inline-block;
-    padding: 0.8rem 2.5rem;
-    border: 1px solid white;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     color: white;
     text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s;
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
   }
 
-  .cta:hover {
-    background: white;
-    color: var(--color-text);
+  .hero-btn:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-deep);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1s 1.3s forwards;
+  }
+
+  .scroll-hint span {
+    display: block;
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
   }
 </style>

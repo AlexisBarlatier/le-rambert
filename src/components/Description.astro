@@ -14,25 +14,38 @@ interface Props {
   salles_de_bain: number;
 }
 const { intro, espaces, chambres, salles_de_bain } = Astro.props;
+
+const icons: Record<string, string> = {
+  'Pièces de vie': '🏡',
+  'Terrasses': '☀️',
+  'Piscine': '💧',
+  'Chambres': '🛏️',
+};
 ---
 
-<section id="decouvrir" class="description">
-  <div class="intro">
-    <p class="lead">{intro}</p>
-  </div>
+<section id="decouvrir" class="intro-section">
+  <p class="section-tag">Bienvenue</p>
+  <div class="gold-line"></div>
+  <p class="intro-text">{intro}</p>
+</section>
 
-  <div class="spaces">
-    <h2>Les espaces</h2>
-    <div class="spaces-grid">
+<section id="espaces" class="espaces">
+  <div class="espaces-inner">
+    <p class="section-tag">Les espaces</p>
+    <h2 class="section-title">Chaque pièce, <em>une invitation</em></h2>
+    <p class="section-lead">Près de 600 m² pensés pour réunir, partager et se retrouver.</p>
+    <div class="espaces-grid">
       {espaces.map(({ titre, items }) => (
-        <div class="space">
+        <div class="espace-card" data-animate>
+          <div class="espace-icon">{icons[titre] || '✦'}</div>
           <h3>{titre}</h3>
           <ul>
             {items.map((item) => <li>{item}</li>)}
           </ul>
         </div>
       ))}
-      <div class="space">
+      <div class="espace-card" data-animate>
+        <div class="espace-icon">🛏️</div>
         <h3>Chambres</h3>
         <ul>
           {chambres.map(({ type, nombre }) => <li>{nombre} × {type}</li>)}
@@ -44,63 +57,98 @@ const { intro, espaces, chambres, salles_de_bain } = Astro.props;
 </section>
 
 <style>
-  .description {
-    padding: 6rem 2rem;
-    max-width: 1000px;
+  .intro-section {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 7rem 2rem;
+  }
+
+  .gold-line {
+    width: 50px;
+    height: 1px;
+    background: var(--color-gold);
+    margin: 2rem auto;
+  }
+
+  .intro-text {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--color-accent);
+    max-width: 680px;
     margin: 0 auto;
   }
 
-  .intro {
-    text-align: center;
-    margin-bottom: 4rem;
+  .espaces {
+    background: var(--color-warm-white, #FFFCF8);
+    padding: 6rem 2rem;
   }
 
-  .lead {
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
-    line-height: 1.8;
-    color: var(--color-accent);
+  .espaces-inner {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .spaces h2 {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 400;
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
-
-  .spaces-grid {
+  .espaces-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
   }
 
-  .space h3 {
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
-    color: var(--color-accent);
-  }
-
-  .space ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .space li {
-    padding-left: 1rem;
+  .espace-card {
+    padding: 2.5rem 2rem;
+    background: var(--color-bg);
+    border: 1px solid rgba(212, 197, 178, 0.4);
+    transition: all 0.4s;
     position: relative;
-    font-size: 0.95rem;
+    overflow: hidden;
   }
 
-  .space li::before {
-    content: '—';
+  .espace-card::before {
+    content: '';
     position: absolute;
-    left: 0;
-    color: var(--color-light);
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .espace-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .espace-card:hover {
+    box-shadow: 0 12px 40px rgba(30, 21, 16, 0.06);
+  }
+
+  .espace-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .espace-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .espace-card ul {
+    list-style: none;
+  }
+
+  .espace-card li {
+    font-size: 0.92rem;
+    color: var(--color-accent);
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(212, 197, 178, 0.25);
+  }
+
+  .espace-card li:last-child {
+    border: none;
   }
 </style>
