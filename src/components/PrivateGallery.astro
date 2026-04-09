@@ -1,0 +1,56 @@
+---
+// Galerie privée — toutes les photos détaillées
+// TODO: charger dynamiquement les images depuis public/photos/private/
+---
+
+<section class="private-gallery">
+  <h2>Les chambres</h2>
+  <div class="gallery-grid">
+    <div class="placeholder">Photos chambres à ajouter</div>
+  </div>
+
+  <h2>Salles de bain</h2>
+  <div class="gallery-grid">
+    <div class="placeholder">Photos salles de bain à ajouter</div>
+  </div>
+
+  <h2>La cuisine</h2>
+  <div class="gallery-grid">
+    <div class="placeholder">Photos cuisine à ajouter</div>
+  </div>
+
+  <h2>Activités</h2>
+  <div class="gallery-grid">
+    <div class="placeholder">Photos activités à ajouter</div>
+  </div>
+</section>
+
+<style>
+  .private-gallery {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .private-gallery h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin: 3rem 0 1.5rem;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .placeholder {
+    background: var(--color-light);
+    padding: 4rem 2rem;
+    color: var(--color-accent);
+    font-style: italic;
+    text-align: center;
+  }
+</style>

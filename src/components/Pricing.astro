@@ -1,0 +1,65 @@
+---
+// Tarifs
+---
+
+<section id="tarifs" class="pricing">
+  <h2>Tarifs</h2>
+  <div class="pricing-cards">
+    <div class="card">
+      <div class="price">4 200 €</div>
+      <div class="unit">par semaine</div>
+    </div>
+    <div class="card">
+      <div class="price">700 €</div>
+      <div class="unit">par nuit</div>
+      <div class="note">Minimum 3 nuits</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    padding: 6rem 2rem;
+    text-align: center;
+  }
+
+  .pricing h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .pricing-cards {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    padding: 2.5rem 3rem;
+    border: 1px solid var(--color-light);
+  }
+
+  .price {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--color-accent);
+  }
+
+  .unit {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+  }
+
+  .note {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+  }
+</style>

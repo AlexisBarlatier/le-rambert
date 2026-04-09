@@ -1,0 +1,61 @@
+---
+// Hero plein écran avec carrousel de photos
+// TODO: implémenter le carrousel (Swiper ou custom)
+---
+
+<section id="hero" class="hero">
+  <div class="hero-content">
+    <h1>Le Rambert</h1>
+    <p class="tagline">Maison de vacances en Dordogne</p>
+    <a href="#contact" class="cta">Réserver</a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* TODO: remplacer par la vraie photo hero */
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+      var(--color-accent);
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+  }
+
+  .hero-content h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .tagline {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .cta {
+    display: inline-block;
+    padding: 0.8rem 2.5rem;
+    border: 1px solid white;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+
+  .cta:hover {
+    background: white;
+    color: var(--color-text);
+  }
+</style>

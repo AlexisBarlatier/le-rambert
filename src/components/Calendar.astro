@@ -1,0 +1,45 @@
+---
+// Calendrier des disponibilités
+// TODO: lire le flux iCal/JSON depuis Google Calendar
+// Pour l'instant, placeholder statique
+---
+
+<section id="disponibilites" class="calendar">
+  <h2>Disponibilités</h2>
+  <p class="calendar-note">Calendrier des disponibilités à venir</p>
+  <!-- TODO: composant calendrier mensuel
+       - Vert = disponible
+       - Gris = réservé
+       - Source : Google Calendar (iCal public)
+  -->
+  <div class="placeholder">Calendrier en cours de développement</div>
+</section>
+
+<style>
+  .calendar {
+    padding: 6rem 2rem;
+    background: white;
+    text-align: center;
+  }
+
+  .calendar h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+  }
+
+  .calendar-note {
+    color: #888;
+    margin-bottom: 2rem;
+  }
+
+  .placeholder {
+    background: var(--color-light);
+    padding: 4rem 2rem;
+    color: var(--color-accent);
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>

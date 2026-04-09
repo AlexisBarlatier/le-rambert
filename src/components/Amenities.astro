@@ -1,0 +1,58 @@
+---
+// Équipements de la maison
+const amenities = [
+  { icon: '🏊', label: 'Piscine privée' },
+  { icon: '🌳', label: 'Grand jardin' },
+  { icon: '🔥', label: 'Barbecue' },
+  { icon: '🅿️', label: 'Parking privé' },
+  { icon: '📶', label: 'Wi-Fi' },
+  { icon: '👕', label: 'Lave-linge' },
+];
+---
+
+<section id="equipements" class="amenities">
+  <h2>Équipements</h2>
+  <ul class="amenities-grid">
+    {amenities.map(({ icon, label }) => (
+      <li>
+        <span class="icon">{icon}</span>
+        <span>{label}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .amenities {
+    padding: 6rem 2rem;
+    background: white;
+    text-align: center;
+  }
+
+  .amenities h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    list-style: none;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .amenities-grid li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .icon {
+    font-size: 2rem;
+  }
+</style>

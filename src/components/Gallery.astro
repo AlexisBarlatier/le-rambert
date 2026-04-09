@@ -1,0 +1,42 @@
+---
+// Galerie publique — photos teaser (extérieurs, piscine)
+// TODO: charger dynamiquement les images depuis public/photos/
+---
+
+<section id="galerie" class="gallery">
+  <h2>Le lieu</h2>
+  <div class="gallery-grid">
+    <!-- TODO: boucle sur les photos extérieur + piscine -->
+    <div class="placeholder">Photos extérieur à ajouter</div>
+    <div class="placeholder">Photos piscine à ajouter</div>
+  </div>
+</section>
+
+<style>
+  .gallery {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .gallery h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .placeholder {
+    background: var(--color-light);
+    padding: 4rem 2rem;
+    color: var(--color-accent);
+    font-style: italic;
+  }
+</style>

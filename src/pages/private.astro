@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PrivateGallery from '../components/PrivateGallery.astro';
+
+// Vérifier le cookie de session
+const sessionCookie = Astro.cookies.get('rambert_session')?.value;
+if (!sessionCookie) {
+  return Astro.redirect('/#acces-prive');
+}
+---
+
+<Layout title="Le Rambert — Visite complète" description="Accès privé — photos, adresse et guide pratique">
+  <header class="private-header">
+    <a href="/" class="back">&larr; Retour au site</a>
+    <h1>Le Rambert — Visite complète</h1>
+    <p class="subtitle">Bienvenue dans les coulisses</p>
+  </header>
+
+  <PrivateGallery />
+
+  <!-- TODO: adresse, guide local, infos pratiques depuis private.md -->
+</Layout>
+
+<style>
+  .private-header {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+  }
+
+  .private-header h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-accent);
+    font-style: italic;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+</style>
