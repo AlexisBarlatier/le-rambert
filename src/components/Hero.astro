@@ -20,8 +20,7 @@ const lastWord = words.pop();
 const rest = words.join(' ');
 ---
 
-<section id="hero" class="hero" style={heroImage ? `background: linear-gradient(180deg, rgba(30,21,16,0.1) 0%, rgba(30,21,16,0.4) 50%, rgba(30,21,16,0.7) 100%), url('${heroImage}') center/cover no-repeat` : undefined}>
-  <div class="hero-overlay"></div>
+<section id="hero" class="hero" style={heroImage ? `background: linear-gradient(180deg, rgba(30,21,16,0.35) 0%, rgba(30,21,16,0.5) 50%, rgba(30,21,16,0.7) 100%), url('${heroImage}') center/cover no-repeat` : undefined}>
   <div class="hero-content">
     <p class="hero-tag">Location de vacances en Dordogne</p>
     <h1>{rest} <em>{lastWord}</em></h1>
@@ -44,12 +43,6 @@ const rest = words.join(' ');
     position: relative;
     overflow: hidden;
     background-color: var(--color-accent);
-  }
-
-  .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(30, 21, 16, 0.25);
   }
 
   .hero-content {
@@ -90,7 +83,7 @@ const rest = words.join(' ');
     font-family: var(--font-heading);
     font-size: 1.3rem;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.92);
     margin-bottom: 0.6rem;
     opacity: 0;
     animation: fadeUp 1s 0.7s forwards;
@@ -99,7 +92,7 @@ const rest = words.join(' ');
   .hero-location {
     font-size: 0.8rem;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.75);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-bottom: 2.5rem;
