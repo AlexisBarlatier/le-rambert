@@ -17,6 +17,12 @@ pnpm-debug.log*
 .env
 .env.production
 
+# python venv (used for HEIC conversion)
+.venv/
+
+# photos (too large for git, managed separately)
+public/photos/
+
 # macOS-specific files
 .DS_Store
 

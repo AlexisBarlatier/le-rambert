@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "astro": "^6.1.5",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "image-size": "^2.0.2"
   }
 }

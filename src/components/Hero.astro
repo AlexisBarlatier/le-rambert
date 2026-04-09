@@ -1,13 +1,23 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
+
 interface Props {
   title: string;
   subtitle: string;
   location: string;
 }
 const { title, subtitle, location } = Astro.props;
+
+// Trouver la première image dans hero/
+const heroDir = path.resolve('public/photos/hero');
+const heroFiles = fs.existsSync(heroDir)
+  ? fs.readdirSync(heroDir).filter(f => /\.(jpe?g|png|webp)$/i.test(f)).sort()
+  : [];
+const heroImage = heroFiles.length > 0 ? `/photos/hero/${heroFiles[0]}` : null;
 ---
 
-<section id="hero" class="hero">
+<section id="hero" class="hero" style={heroImage ? `background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('${heroImage}')` : undefined}>
   <div class="hero-content">
     <h1>{title}</h1>
     <p class="tagline">{subtitle}</p>
@@ -23,9 +33,7 @@ const { title, subtitle, location } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* TODO: remplacer par la vraie photo hero */
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-      var(--color-accent);
+    background-color: var(--color-accent);
     background-size: cover;
     background-position: center;
     color: white;
