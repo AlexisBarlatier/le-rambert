@@ -6,6 +6,7 @@ import sizeOf from 'image-size';
 interface Photo {
   src: string;
   landscape: boolean;
+  colSpan: number;
 }
 
 function listPhotos(dir: string): Photo[] {
@@ -18,11 +19,37 @@ function listPhotos(dir: string): Photo[] {
       const filePath = path.join(fullPath, f);
       const buffer = fs.readFileSync(filePath);
       const dims = sizeOf(buffer);
-      return {
-        src: `/photos/private/${dir}/${f}`,
-        landscape: (dims.width || 0) >= (dims.height || 0),
-      };
+      const landscape = (dims.width || 0) >= (dims.height || 0);
+      return { src: `/photos/private/${dir}/${f}`, landscape, colSpan: landscape ? 2 : 1 };
     });
+}
+
+function optimizeGrid(photos: Photo[]): number {
+  const totalSpan = photos.reduce((sum, p) => sum + p.colSpan, 0);
+  if (totalSpan <= 4) return totalSpan;
+
+  const portraitCount = photos.filter(p => p.colSpan === 1).length;
+
+  let bestCols = 4;
+  let bestExtra = Infinity;
+  for (const cols of [4, 3, 2]) {
+    const remainder = totalSpan % cols;
+    const extra = remainder === 0 ? 0 : cols - remainder;
+    if (extra <= portraitCount && (extra < bestExtra || (extra === bestExtra && cols > bestCols))) {
+      bestExtra = extra;
+      bestCols = cols;
+    }
+  }
+
+  let promoted = 0;
+  for (let i = photos.length - 1; i >= 0 && promoted < bestExtra; i--) {
+    if (photos[i].colSpan === 1) {
+      photos[i].colSpan = 2;
+      promoted++;
+    }
+  }
+
+  return bestCols;
 }
 
 const sections = [
@@ -31,16 +58,17 @@ const sections = [
   { title: 'La cuisine', photos: listPhotos('cuisine') },
   { title: 'Activités', photos: listPhotos('activites') },
 ];
+const sectionCols = sections.map(s => optimizeGrid(s.photos));
 ---
 
 <section class="private-gallery">
-  {sections.map(({ title, photos }) => (
+  {sections.map(({ title, photos }, i) => (
     <>
       <h2>{title}</h2>
       {photos.length > 0 ? (
-        <div class="gallery-grid">
-          {photos.map(({ src, landscape }) => (
-            <div class:list={['photo', landscape ? 'wide' : 'tall']}>
+        <div class="gallery-grid" style={`--cols: ${sectionCols[i]}`}>
+          {photos.map(({ src, colSpan }) => (
+            <div class:list={['photo', colSpan === 2 ? 'wide' : 'tall']}>
               <img src={src} alt={`Le Rambert — ${title}`} loading="lazy" />
             </div>
           ))}
@@ -69,7 +97,7 @@ const sections = [
 
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--cols, 4), 1fr);
     grid-auto-rows: 200px;
     grid-auto-flow: dense;
     gap: 0.5rem;
@@ -104,14 +132,14 @@ const sections = [
 
   @media (max-width: 900px) {
     .gallery-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(min(var(--cols, 4), 3), 1fr);
       grid-auto-rows: 140px;
     }
   }
 
   @media (max-width: 600px) {
     .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(min(var(--cols, 4), 2), 1fr);
       grid-auto-rows: 120px;
     }
   }
