@@ -1,22 +1,24 @@
 ---
-// Équipements de la maison
 const amenities = [
-  { icon: '🏊', label: 'Piscine privée' },
-  { icon: '🌳', label: 'Grand jardin' },
-  { icon: '🔥', label: 'Barbecue' },
-  { icon: '🅿️', label: 'Parking privé' },
-  { icon: '📶', label: 'Wi-Fi' },
-  { icon: '👕', label: 'Lave-linge' },
+  { icon: '🏊', label: 'Piscine 30 m', detail: 'Juillet & août' },
+  { icon: '🌳', label: 'Parc 3 hectares', detail: 'Vue sur la vallée' },
+  { icon: '🛏️', label: '6 chambres', detail: '4 salles de bain' },
+  { icon: '📶', label: 'Wi-Fi fibre', detail: '' },
+  { icon: '🔌', label: 'Bornes VE', detail: '2 prises de recharge' },
+  { icon: '🅿️', label: 'Parking privé', detail: '' },
+  { icon: '👕', label: 'Lave-linge', detail: '& sèche-linge' },
+  { icon: '🏠', label: 'Gardien', detail: 'Discret, sur place' },
 ];
 ---
 
 <section id="equipements" class="amenities">
-  <h2>Équipements</h2>
+  <h2>Commodités</h2>
   <ul class="amenities-grid">
-    {amenities.map(({ icon, label }) => (
+    {amenities.map(({ icon, label, detail }) => (
       <li>
         <span class="icon">{icon}</span>
-        <span>{label}</span>
+        <span class="label">{label}</span>
+        {detail && <span class="detail">{detail}</span>}
       </li>
     ))}
   </ul>
@@ -38,10 +40,10 @@ const amenities = [
 
   .amenities-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2.5rem;
     list-style: none;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
@@ -49,10 +51,20 @@ const amenities = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem;
   }
 
   .icon {
     font-size: 2rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .label {
+    font-weight: 500;
+  }
+
+  .detail {
+    font-size: 0.85rem;
+    color: #888;
   }
 </style>

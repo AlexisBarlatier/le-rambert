@@ -1,0 +1,84 @@
+---
+// Activités à proximité
+const categories = [
+  {
+    title: 'Balades à vélo',
+    items: ['Voie verte à proximité', 'Locations de vélos avec accessoires enfants'],
+  },
+  {
+    title: 'Nature & aventure',
+    items: ['Accrobranche et parcours aventure', 'Descentes en canoë sur la Dordogne', 'Vols en montgolfière'],
+  },
+  {
+    title: 'Patrimoine & visites',
+    items: ['Jardins de Marqueyssac', "Jardins d'Eyrignac", 'Grottes naturelles', 'Châteaux de Beynac, Castelnaud et alentours'],
+  },
+];
+---
+
+<section id="activites" class="activities">
+  <h2>Découvrir le Périgord Noir</h2>
+  <div class="activities-grid">
+    {categories.map(({ title, items }) => (
+      <div class="category">
+        <h3>{title}</h3>
+        <ul>
+          {items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .activities {
+    padding: 6rem 2rem;
+    text-align: center;
+  }
+
+  .activities h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .category h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  .category ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .category li {
+    padding-left: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+  }
+
+  .category li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--color-light);
+  }
+</style>

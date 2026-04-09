@@ -1,0 +1,108 @@
+---
+// Section description — l'expérience + la maison
+---
+
+<section id="decouvrir" class="description">
+  <div class="intro">
+    <p class="lead">La Maison du Rambert s'ouvre sur un parc de 3 hectares, offrant une vue panoramique sur le château de Fénelon et la vallée de la Dordogne.</p>
+    <p>Avec près de 600 m², de vastes espaces intérieurs et un environnement naturel préservé, elle est idéale pour des séjours en famille ou entre amis.</p>
+  </div>
+
+  <div class="spaces">
+    <h2>Les espaces</h2>
+    <div class="spaces-grid">
+      <div class="space">
+        <h3>Pièces de vie</h3>
+        <ul>
+          <li>Grande cuisine entièrement équipée</li>
+          <li>Grande et petite salle à manger</li>
+          <li>Grand salon détente</li>
+          <li>Petit salon — jeux, lecture, petit comité</li>
+        </ul>
+      </div>
+      <div class="space">
+        <h3>Terrasses</h3>
+        <ul>
+          <li>Terrasse plein sud — repas en extérieur</li>
+          <li>Terrasse plein ouest — apéritif face au coucher du soleil</li>
+        </ul>
+      </div>
+      <div class="space">
+        <h3>Chambres</h3>
+        <ul>
+          <li>4 chambres doubles</li>
+          <li>2 chambres doubles + lit simple</li>
+          <li>4 salles de bain</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .description {
+    padding: 6rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .lead {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  .intro p:last-child {
+    font-size: 1.1rem;
+    color: #666;
+  }
+
+  .spaces h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .spaces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .space h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  .space ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .space li {
+    padding-left: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+  }
+
+  .space li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--color-light);
+  }
+</style>
