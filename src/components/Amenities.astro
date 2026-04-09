@@ -1,20 +1,19 @@
 ---
-const amenities = [
-  { icon: '🏊', label: 'Piscine 30 m', detail: 'Juillet & août' },
-  { icon: '🌳', label: 'Parc 3 hectares', detail: 'Vue sur la vallée' },
-  { icon: '🛏️', label: '6 chambres', detail: '4 salles de bain' },
-  { icon: '📶', label: 'Wi-Fi fibre', detail: '' },
-  { icon: '🔌', label: 'Bornes VE', detail: '2 prises de recharge' },
-  { icon: '🅿️', label: 'Parking privé', detail: '' },
-  { icon: '👕', label: 'Lave-linge', detail: '& sèche-linge' },
-  { icon: '🏠', label: 'Gardien', detail: 'Discret, sur place' },
-];
+interface Commodite {
+  icon: string;
+  label: string;
+  detail?: string;
+}
+interface Props {
+  commodites: Commodite[];
+}
+const { commodites } = Astro.props;
 ---
 
 <section id="equipements" class="amenities">
   <h2>Commodités</h2>
   <ul class="amenities-grid">
-    {amenities.map(({ icon, label, detail }) => (
+    {commodites.map(({ icon, label, detail }) => (
       <li>
         <span class="icon">{icon}</span>
         <span class="label">{label}</span>

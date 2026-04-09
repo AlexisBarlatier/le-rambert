@@ -1,38 +1,42 @@
 ---
-// Section description — l'expérience + la maison
+interface Espace {
+  titre: string;
+  items: string[];
+}
+interface Chambre {
+  type: string;
+  nombre: number;
+}
+interface Props {
+  intro: string;
+  espaces: Espace[];
+  chambres: Chambre[];
+  salles_de_bain: number;
+}
+const { intro, espaces, chambres, salles_de_bain } = Astro.props;
 ---
 
 <section id="decouvrir" class="description">
   <div class="intro">
-    <p class="lead">La Maison du Rambert s'ouvre sur un parc de 3 hectares, offrant une vue panoramique sur le château de Fénelon et la vallée de la Dordogne.</p>
-    <p>Avec près de 600 m², de vastes espaces intérieurs et un environnement naturel préservé, elle est idéale pour des séjours en famille ou entre amis.</p>
+    <p class="lead">{intro}</p>
   </div>
 
   <div class="spaces">
     <h2>Les espaces</h2>
     <div class="spaces-grid">
-      <div class="space">
-        <h3>Pièces de vie</h3>
-        <ul>
-          <li>Grande cuisine entièrement équipée</li>
-          <li>Grande et petite salle à manger</li>
-          <li>Grand salon détente</li>
-          <li>Petit salon — jeux, lecture, petit comité</li>
-        </ul>
-      </div>
-      <div class="space">
-        <h3>Terrasses</h3>
-        <ul>
-          <li>Terrasse plein sud — repas en extérieur</li>
-          <li>Terrasse plein ouest — apéritif face au coucher du soleil</li>
-        </ul>
-      </div>
+      {espaces.map(({ titre, items }) => (
+        <div class="space">
+          <h3>{titre}</h3>
+          <ul>
+            {items.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))}
       <div class="space">
         <h3>Chambres</h3>
         <ul>
-          <li>4 chambres doubles</li>
-          <li>2 chambres doubles + lit simple</li>
-          <li>4 salles de bain</li>
+          {chambres.map(({ type, nombre }) => <li>{nombre} × {type}</li>)}
+          <li>{salles_de_bain} salles de bain</li>
         </ul>
       </div>
     </div>
@@ -55,13 +59,7 @@
     font-family: var(--font-heading);
     font-size: 1.4rem;
     line-height: 1.8;
-    margin-bottom: 1rem;
     color: var(--color-accent);
-  }
-
-  .intro p:last-child {
-    font-size: 1.1rem;
-    color: #666;
   }
 
   .spaces h2 {

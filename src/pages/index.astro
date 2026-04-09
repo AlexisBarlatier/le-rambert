@@ -1,4 +1,7 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
+import matter from 'gray-matter';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Description from '../components/Description.astro';
@@ -9,15 +12,18 @@ import Pricing from '../components/Pricing.astro';
 import Calendar from '../components/Calendar.astro';
 import PrivateTeaser from '../components/PrivateTeaser.astro';
 import Contact from '../components/Contact.astro';
+
+const siteFile = fs.readFileSync(path.resolve('src/content/site.md'), 'utf-8');
+const { data: site } = matter(siteFile);
 ---
 
-<Layout title="La Maison du Rambert — Location de vacances en Dordogne">
-  <Hero />
-  <Description />
+<Layout title={`${site.title} — Location de vacances en Dordogne`}>
+  <Hero title={site.title} subtitle={site.subtitle} location={site.location} />
+  <Description intro={site.intro} espaces={site.espaces} chambres={site.chambres} salles_de_bain={site.salles_de_bain} />
   <Gallery />
-  <Amenities />
-  <Activities />
-  <Pricing />
+  <Amenities commodites={site.commodites} />
+  <Activities activites={site.activites} />
+  <Pricing tarifs={site.tarifs} />
   <Calendar />
   <PrivateTeaser />
   <Contact />

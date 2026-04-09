@@ -1,23 +1,37 @@
 ---
-// Tarifs
+interface Tarifs {
+  semaine: number;
+  nuit: number;
+  nuit_minimum: number;
+  menage: {
+    prix: number;
+    description: string;
+  };
+}
+interface Props {
+  tarifs: Tarifs;
+}
+const { tarifs } = Astro.props;
+
+const formatPrice = (n: number) => n.toLocaleString('fr-FR');
 ---
 
 <section id="tarifs" class="pricing">
   <h2>Tarifs</h2>
   <div class="pricing-cards">
     <div class="card">
-      <div class="price">4 200 €</div>
+      <div class="price">{formatPrice(tarifs.semaine)} €</div>
       <div class="unit">par semaine</div>
     </div>
     <div class="card">
-      <div class="price">700 €</div>
+      <div class="price">{formatPrice(tarifs.nuit)} €</div>
       <div class="unit">par nuit</div>
-      <div class="note">Minimum 3 nuits</div>
+      <div class="note">Minimum {tarifs.nuit_minimum} nuits</div>
     </div>
   </div>
   <div class="menage">
-    <p><strong>Forfait ménage obligatoire : 400 € TTC</strong></p>
-    <p>Ménage de fin de séjour, lits faits à l'arrivée, draps et serviettes inclus.</p>
+    <p><strong>Forfait ménage obligatoire : {formatPrice(tarifs.menage.prix)} € TTC</strong></p>
+    <p>{tarifs.menage.description}</p>
   </div>
 </section>
 

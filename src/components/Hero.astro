@@ -1,13 +1,17 @@
 ---
-// Hero plein écran avec carrousel de photos
-// TODO: implémenter le carrousel (Swiper ou custom)
+interface Props {
+  title: string;
+  subtitle: string;
+  location: string;
+}
+const { title, subtitle, location } = Astro.props;
 ---
 
 <section id="hero" class="hero">
   <div class="hero-content">
-    <h1>La Maison du Rambert</h1>
-    <p class="tagline">Une grande maison familiale en Dordogne</p>
-    <p class="location">Périgord Noir — à 12 km de Sarlat-la-Canéda</p>
+    <h1>{title}</h1>
+    <p class="tagline">{subtitle}</p>
+    <p class="location">{location}</p>
     <a href="#contact" class="cta">Réserver</a>
   </div>
 </section>

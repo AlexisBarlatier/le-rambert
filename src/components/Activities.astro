@@ -1,27 +1,20 @@
 ---
-// Activités à proximité
-const categories = [
-  {
-    title: 'Balades à vélo',
-    items: ['Voie verte à proximité', 'Locations de vélos avec accessoires enfants'],
-  },
-  {
-    title: 'Nature & aventure',
-    items: ['Accrobranche et parcours aventure', 'Descentes en canoë sur la Dordogne', 'Vols en montgolfière'],
-  },
-  {
-    title: 'Patrimoine & visites',
-    items: ['Jardins de Marqueyssac', "Jardins d'Eyrignac", 'Grottes naturelles', 'Châteaux de Beynac, Castelnaud et alentours'],
-  },
-];
+interface Activite {
+  titre: string;
+  items: string[];
+}
+interface Props {
+  activites: Activite[];
+}
+const { activites } = Astro.props;
 ---
 
 <section id="activites" class="activities">
   <h2>Découvrir le Périgord Noir</h2>
   <div class="activities-grid">
-    {categories.map(({ title, items }) => (
+    {activites.map(({ titre, items }) => (
       <div class="category">
-        <h3>{title}</h3>
+        <h3>{titre}</h3>
         <ul>
           {items.map((item) => (
             <li>{item}</li>
