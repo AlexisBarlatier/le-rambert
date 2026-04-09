@@ -1,4 +1,6 @@
 ---
+import Lightbox from '../components/Lightbox.astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -20,6 +22,7 @@ const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Pér
   </head>
   <body>
     <slot />
+    <Lightbox />
   </body>
 </html>
 

@@ -1,0 +1,41 @@
+<dialog id="lightbox">
+  <img src="" alt="" />
+</dialog>
+
+<style>
+  #lightbox {
+    border: none;
+    background: rgba(0, 0, 0, 0.92);
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    padding: 2rem;
+    cursor: pointer;
+  }
+
+  #lightbox::backdrop {
+    background: transparent;
+  }
+
+  #lightbox img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement;
+  const dialogImg = dialog.querySelector('img')!;
+
+  document.addEventListener('click', (e) => {
+    const img = (e.target as HTMLElement).closest('.gallery-grid img') as HTMLImageElement | null;
+    if (!img) return;
+    dialogImg.src = img.src;
+    dialogImg.alt = img.alt;
+    dialog.showModal();
+  });
+
+  dialog.addEventListener('click', () => dialog.close());
+</script>
