@@ -1,12 +1,13 @@
 ---
 // Section réservation : calendrier + formulaire de contact côte à côte
+// Clic sur jours disponibles → pré-remplit les dates dans le message
 ---
 
 <section id="disponibilites" class="booking" data-animate>
   <div class="booking-header">
     <p class="section-tag">Réservation</p>
     <h2 class="section-title">Disponibilités & <em>contact</em></h2>
-    <p class="section-lead">Consultez les disponibilités et envoyez-nous un message pour réserver</p>
+    <p class="section-lead">Sélectionnez vos dates sur le calendrier, puis envoyez-nous un message</p>
   </div>
 
   <div class="booking-layout">
@@ -27,7 +28,9 @@
         <div class="cal-legend">
           <span class="legend-item"><span class="dot available"></span> Disponible</span>
           <span class="legend-item"><span class="dot booked"></span> Réservé</span>
+          <span class="legend-item"><span class="dot selected"></span> Sélection</span>
         </div>
+        <p class="cal-hint">Cliquez sur un jour disponible pour choisir vos dates</p>
       </div>
       <div class="cal-loading">Chargement…</div>
       <div class="cal-error" hidden>Calendrier indisponible.</div>
@@ -36,12 +39,16 @@
     <!-- Formulaire -->
     <div class="booking-form">
       <h3 class="form-title">Envoyez-nous un message</h3>
-      <form class="contact-form" method="POST" action="/api/contact">
+      <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <p class="hp" aria-hidden="true">
+          <label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+        <input type="hidden" name="form-name" value="contact" />
         <input type="text" name="name" placeholder="Nom" required />
         <input type="email" name="email" placeholder="Email" required />
-        <input type="text" name="subject" placeholder="Objet" />
-        <textarea name="message" placeholder="Votre message — dates souhaitées, nombre de personnes..." rows="5" required></textarea>
-        <button type="submit">Envoyer</button>
+        <input type="tel" name="phone" placeholder="Téléphone (optionnel)" />
+        <textarea name="message" rows="8" required></textarea>
+        <button type="submit" disabled>Envoyer</button>
       </form>
     </div>
   </div>
@@ -160,6 +167,11 @@
     background: rgba(184, 150, 90, 0.12);
     color: var(--color-text);
     font-weight: 400;
+    cursor: pointer;
+  }
+
+  :global(.cal-day.available:hover) {
+    background: rgba(184, 150, 90, 0.25);
   }
 
   :global(.cal-day.today) {
@@ -177,6 +189,19 @@
   :global(.cal-day.past) {
     color: #D4C5B2;
     background: none;
+  }
+
+  :global(.cal-day.selected) {
+    background: var(--color-gold);
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  :global(.cal-day.in-range) {
+    background: rgba(184, 150, 90, 0.3);
+    color: var(--color-text);
+    font-weight: 400;
   }
 
   .cal-legend {
@@ -206,6 +231,17 @@
 
   .dot.booked {
     background: #D5CCC2;
+  }
+
+  .dot.selected {
+    background: var(--color-gold);
+  }
+
+  .cal-hint {
+    font-size: 0.72rem;
+    color: var(--color-taupe);
+    margin-top: 0.8rem;
+    font-style: italic;
   }
 
   .cal-loading {
@@ -245,6 +281,13 @@
     gap: 0.8rem;
   }
 
+  .hp {
+    position: absolute;
+    left: -9999px;
+    height: 0;
+    overflow: hidden;
+  }
+
   .contact-form input,
   .contact-form textarea {
     font-family: var(--font-body);
@@ -265,7 +308,7 @@
 
   .contact-form textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 160px;
   }
 
   .contact-form button {
@@ -284,9 +327,29 @@
     margin-top: 0.5rem;
   }
 
-  .contact-form button:hover {
+  .contact-form button:hover:not(:disabled) {
     background: var(--color-gold);
     color: var(--color-deep);
+  }
+
+  .contact-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  :global(.form-success) {
+    text-align: center;
+    color: var(--color-accent);
+    font-size: 1rem;
+    padding: 2rem 0;
+    font-weight: 400;
+  }
+
+  :global(.form-error) {
+    text-align: center;
+    color: #a04040;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
   }
 
   /* --- Mobile --- */
@@ -323,18 +386,121 @@
   let currentYear: number;
   let currentMonth: number;
 
+  // Sélection de dates
+  let selectedStart: string | null = null;
+  let selectedEnd: string | null = null;
+
   const container = document.querySelector('.calendar-container') as HTMLElement;
   const loading = document.querySelector('.cal-loading') as HTMLElement;
   const errorEl = document.querySelector('.cal-error') as HTMLElement;
   const navLabel = document.querySelector('.cal-nav-label') as HTMLElement;
   const daysGrid = document.querySelector('.cal-days') as HTMLElement;
+  const textarea = document.querySelector('.contact-form textarea') as HTMLTextAreaElement;
+  const form = document.querySelector('.contact-form') as HTMLFormElement;
+  const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+
+  // Anti-bot : activer le bouton après 3 secondes
+  setTimeout(() => { submitBtn.disabled = false; }, 3000);
+
+  // Soumission via fetch (pour afficher une confirmation sans quitter la page)
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi…';
+
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form) as any).toString(),
+      });
+
+      if (res.ok) {
+        form.innerHTML = '<p class="form-success">Message envoyé ! Nous vous répondrons rapidement.</p>';
+      } else {
+        submitBtn.textContent = 'Envoyer';
+        submitBtn.disabled = false;
+        form.insertAdjacentHTML('beforeend', '<p class="form-error">Erreur lors de l\'envoi. Réessayez ou contactez-nous directement.</p>');
+      }
+    } catch {
+      submitBtn.textContent = 'Envoyer';
+      submitBtn.disabled = false;
+      form.insertAdjacentHTML('beforeend', '<p class="form-error">Erreur de connexion. Réessayez.</p>');
+    }
+  });
 
   const now = new Date();
   currentYear = now.getFullYear();
   currentMonth = now.getMonth();
 
+  // Message template
+  function buildMessage(): string {
+    const dateLine = selectedStart && selectedEnd
+      ? `du ${formatDateFR(selectedStart)} au ${formatDateFR(selectedEnd)}`
+      : 'du ........ au ........';
+
+    return `Bonjour,\n\nNous souhaiterions réserver Le Rambert ${dateLine}.\nNous serons .... personnes (dont .... enfants).\n\nMerci !`;
+  }
+
+  function formatDateFR(dateStr: string): string {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // Init message template
+  textarea.value = buildMessage();
+
   document.querySelector('.cal-prev')?.addEventListener('click', () => navigate(-1));
   document.querySelector('.cal-next')?.addEventListener('click', () => navigate(1));
+
+  // Event delegation pour les clics sur les jours
+  daysGrid.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.classList.contains('available') && !target.classList.contains('in-range') && !target.classList.contains('selected')) return;
+
+    const dateStr = target.dataset.date;
+    if (!dateStr) return;
+
+    if (!selectedStart || (selectedStart && selectedEnd)) {
+      // Premier clic ou reset
+      selectedStart = dateStr;
+      selectedEnd = null;
+    } else {
+      // Deuxième clic
+      if (dateStr < selectedStart) {
+        selectedEnd = selectedStart;
+        selectedStart = dateStr;
+      } else if (dateStr === selectedStart) {
+        // Clic sur le même jour → reset
+        selectedStart = null;
+        selectedEnd = null;
+      } else {
+        selectedEnd = dateStr;
+      }
+
+      // Vérifier qu'il n'y a pas de jours réservés dans la plage
+      if (selectedStart && selectedEnd && hasBookedInRange(selectedStart, selectedEnd)) {
+        // Reset si la plage contient des jours réservés
+        selectedStart = dateStr;
+        selectedEnd = null;
+      }
+    }
+
+    textarea.value = buildMessage();
+    render();
+  });
+
+  function hasBookedInRange(start: string, end: string): boolean {
+    const d = new Date(start);
+    const endDate = new Date(end);
+    while (d <= endDate) {
+      const ds = toDateStr(d.getFullYear(), d.getMonth(), d.getDate());
+      if (isBooked(ds)) return true;
+      d.setDate(d.getDate() + 1);
+    }
+    return false;
+  }
 
   function navigate(delta: number) {
     currentMonth += delta;
@@ -345,6 +511,15 @@
 
   function isBooked(dateStr: string): boolean {
     return events.some(e => dateStr >= e.start && dateStr < e.end);
+  }
+
+  function isInRange(dateStr: string): boolean {
+    if (!selectedStart || !selectedEnd) return false;
+    return dateStr > selectedStart && dateStr < selectedEnd;
+  }
+
+  function isSelected(dateStr: string): boolean {
+    return dateStr === selectedStart || dateStr === selectedEnd;
   }
 
   function toDateStr(y: number, m: number, d: number): string {
@@ -374,12 +549,20 @@
       const booked = isBooked(dateStr);
 
       let cls = 'cal-day';
-      if (isPast) cls += ' past';
-      else if (booked) cls += ' booked';
-      else cls += ' available';
+      if (isPast) {
+        cls += ' past';
+      } else if (isSelected(dateStr)) {
+        cls += ' selected';
+      } else if (isInRange(dateStr)) {
+        cls += ' in-range';
+      } else if (booked) {
+        cls += ' booked';
+      } else {
+        cls += ' available';
+      }
       if (isToday) cls += ' today';
 
-      html += `<div class="${cls}">${d}</div>`;
+      html += `<div class="${cls}" data-date="${dateStr}">${d}</div>`;
     }
 
     daysGrid.innerHTML = html;
