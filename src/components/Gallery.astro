@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sizeOf from 'image-size';
+import { t, type Lang } from '../i18n/utils';
 
 interface Photo {
   src: string;
@@ -55,6 +56,11 @@ function optimizeGrid(photos: Photo[]): number {
   return bestCols;
 }
 
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'fr' } = Astro.props;
+
 const exterieur = listPhotos('exterieur');
 const piscine = listPhotos('piscine');
 const colsExterieur = optimizeGrid(exterieur);
@@ -62,15 +68,15 @@ const colsPiscine = optimizeGrid(piscine);
 ---
 
 <section id="galerie" class="gallery">
-  <p class="section-tag">Galerie</p>
-  <h2 class="section-title">Le <em>lieu</em></h2>
-  <p class="section-lead">Parc, terrasses et vue sur le château de Fénelon.</p>
+  <p class="section-tag">{t(lang, 'gallery.tag')}</p>
+  <h2 class="section-title" set:html={t(lang, 'gallery.title')} />
+  <p class="section-lead">{t(lang, 'gallery.lead')}</p>
 
   {exterieur.length > 0 && (
     <div class="gallery-grid" style={`--cols: ${colsExterieur}`}>
       {exterieur.map(({ src, colSpan }) => (
         <div class:list={['photo', colSpan === 2 ? 'wide' : 'tall']}>
-          <img src={src} alt="Le Rambert — extérieur" loading="lazy" />
+          <img src={src} alt={t(lang, 'gallery.alt.exterior')} loading="lazy" />
         </div>
       ))}
     </div>
@@ -78,11 +84,11 @@ const colsPiscine = optimizeGrid(piscine);
 
   {piscine.length > 0 && (
     <>
-      <h3>La piscine</h3>
+      <h3>{t(lang, 'gallery.pool')}</h3>
       <div class="gallery-grid" style={`--cols: ${colsPiscine}`}>
         {piscine.map(({ src, colSpan }) => (
           <div class:list={['photo', colSpan === 2 ? 'wide' : 'tall']}>
-            <img src={src} alt="Le Rambert — piscine" loading="lazy" />
+            <img src={src} alt={t(lang, 'gallery.alt.pool')} loading="lazy" />
           </div>
         ))}
       </div>
@@ -90,7 +96,7 @@ const colsPiscine = optimizeGrid(piscine);
   )}
 
   {exterieur.length === 0 && piscine.length === 0 && (
-    <div class="placeholder">Photos à ajouter</div>
+    <div class="placeholder">{t(lang, 'gallery.placeholder')}</div>
   )}
 </section>
 

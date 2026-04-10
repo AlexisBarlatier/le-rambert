@@ -1,0 +1,31 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import matter from 'gray-matter';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Hero from '../../components/Hero.astro';
+import Description from '../../components/Description.astro';
+import Gallery from '../../components/Gallery.astro';
+import Amenities from '../../components/Amenities.astro';
+import Activities from '../../components/Activities.astro';
+import Pricing from '../../components/Pricing.astro';
+import PrivateTeaser from '../../components/PrivateTeaser.astro';
+import Booking from '../../components/Booking.astro';
+
+const lang = 'en' as const;
+const siteFile = fs.readFileSync(path.resolve('src/content/site.en.md'), 'utf-8');
+const { data: site } = matter(siteFile);
+---
+
+<Layout title={`${site.title} — Holiday rental in Dordogne`} lang={lang} description="Holiday rental in Dordogne — Calviac-en-Périgord, France">
+  <Nav title={site.title} lang={lang} />
+  <Hero title={site.title} subtitle={site.subtitle} location={site.location} lang={lang} />
+  <Description intro={site.intro} espaces={site.espaces} chambres={site.chambres} salles_de_bain={site.salles_de_bain} lang={lang} />
+  <Gallery lang={lang} />
+  <Amenities commodites={site.commodites} lang={lang} />
+  <Activities activites={site.activites} lang={lang} />
+  <Pricing tarifs={site.tarifs} lang={lang} />
+  <PrivateTeaser lang={lang} />
+  <Booking lang={lang} />
+</Layout>

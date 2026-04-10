@@ -1,15 +1,22 @@
 ---
+import { t, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'fr' } = Astro.props;
 ---
 
 <section id="acces-prive" class="private-teaser">
-  <p class="section-tag">Accès privé</p>
-  <h2 class="section-title">Envie d'en <em>voir plus</em> ?</h2>
-  <p class="teaser-text">Accédez à la visite complète : toutes les chambres, les salles de bain, l'adresse exacte et notre guide local.</p>
+  <p class="section-tag">{t(lang, 'private.tag')}</p>
+  <h2 class="section-title" set:html={t(lang, 'private.title')} />
+  <p class="teaser-text">{t(lang, 'private.text')}</p>
   <form class="gate-form" method="POST" action="/api/auth">
-    <input type="email" name="email" placeholder="Votre email" required />
-    <input type="password" name="password" placeholder="Mot de passe" required />
-    <button type="submit">Accéder</button>
-    <p class="rgpd">Votre email est uniquement utilisé pour identifier les accès. Aucune newsletter. Suppression sur demande.</p>
+    <input type="hidden" name="lang" value={lang} />
+    <input type="email" name="email" placeholder={t(lang, 'private.email')} required />
+    <input type="password" name="password" placeholder={t(lang, 'private.password')} required />
+    <button type="submit">{t(lang, 'private.submit')}</button>
+    <p class="rgpd">{t(lang, 'private.rgpd')}</p>
   </form>
 </section>
 

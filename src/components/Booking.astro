@@ -1,13 +1,30 @@
 ---
 // Section réservation : calendrier + formulaire de contact côte à côte
 // Clic sur jours disponibles → pré-remplit les dates dans le message
+import { t, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'fr' } = Astro.props;
 ---
 
-<section id="disponibilites" class="booking" data-animate>
+<section id="disponibilites" class="booking" data-animate
+  data-lang={lang}
+  data-months={t(lang, 'booking.cal.months')}
+  data-msg-template={t(lang, 'booking.msg.template')}
+  data-msg-daterange={t(lang, 'booking.msg.dateRange')}
+  data-msg-placeholder={t(lang, 'booking.msg.datePlaceholder')}
+  data-submit-text={t(lang, 'booking.form.submit')}
+  data-sending-text={t(lang, 'booking.form.sending')}
+  data-success-text={t(lang, 'booking.form.success')}
+  data-error-text={t(lang, 'booking.form.error')}
+  data-network-error={t(lang, 'booking.form.network')}
+>
   <div class="booking-header">
-    <p class="section-tag">Réservation</p>
-    <h2 class="section-title">Disponibilités & <em>contact</em></h2>
-    <p class="section-lead">Sélectionnez vos dates sur le calendrier, puis envoyez-nous un message</p>
+    <p class="section-tag">{t(lang, 'booking.tag')}</p>
+    <h2 class="section-title" set:html={t(lang, 'booking.title')} />
+    <p class="section-lead">{t(lang, 'booking.lead')}</p>
   </div>
 
   <div class="booking-layout">
@@ -21,34 +38,34 @@
         </div>
         <div class="cal-grid">
           <div class="cal-header">
-            <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+            {t(lang, 'booking.cal.days').split(',').map(d => <span>{d}</span>)}
           </div>
           <div class="cal-days"></div>
         </div>
         <div class="cal-legend">
-          <span class="legend-item"><span class="dot available"></span> Disponible</span>
-          <span class="legend-item"><span class="dot booked"></span> Réservé</span>
-          <span class="legend-item"><span class="dot selected"></span> Sélection</span>
+          <span class="legend-item"><span class="dot available"></span> {t(lang, 'booking.cal.available')}</span>
+          <span class="legend-item"><span class="dot booked"></span> {t(lang, 'booking.cal.booked')}</span>
+          <span class="legend-item"><span class="dot selected"></span> {t(lang, 'booking.cal.selected')}</span>
         </div>
-        <p class="cal-hint">Cliquez sur un jour disponible pour choisir vos dates</p>
+        <p class="cal-hint">{t(lang, 'booking.cal.hint')}</p>
       </div>
-      <div class="cal-loading">Chargement…</div>
-      <div class="cal-error" hidden>Calendrier indisponible.</div>
+      <div class="cal-loading">{t(lang, 'booking.cal.loading')}</div>
+      <div class="cal-error" hidden>{t(lang, 'booking.cal.error')}</div>
     </div>
 
     <!-- Formulaire -->
     <div class="booking-form">
-      <h3 class="form-title">Envoyez-nous un message</h3>
+      <h3 class="form-title">{t(lang, 'booking.form.title')}</h3>
       <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="address">
         <p class="hp" aria-hidden="true">
           <label>Adresse <input name="address" tabindex="-1" autocomplete="off" /></label>
         </p>
         <input type="hidden" name="form-name" value="contact" />
-        <input type="text" name="name" placeholder="Nom" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="tel" name="phone" placeholder="Téléphone (optionnel)" />
+        <input type="text" name="name" placeholder={t(lang, 'booking.form.name')} required />
+        <input type="email" name="email" placeholder={t(lang, 'booking.form.email')} required />
+        <input type="tel" name="phone" placeholder={t(lang, 'booking.form.phone')} />
         <textarea name="message" rows="8" required></textarea>
-        <button type="submit" disabled>Envoyer</button>
+        <button type="submit" disabled>{t(lang, 'booking.form.submit')}</button>
       </form>
     </div>
   </div>
@@ -372,10 +389,17 @@
 </style>
 
 <script>
-  const MONTHS_FR = [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-  ];
+  const section = document.querySelector('.booking') as HTMLElement;
+  const MONTHS = section.dataset.months!.split(',');
+  const MSG_TEMPLATE = section.dataset.msgTemplate!;
+  const MSG_DATERANGE = section.dataset.msgDaterange!;
+  const MSG_PLACEHOLDER = section.dataset.msgPlaceholder!;
+  const SUBMIT_TEXT = section.dataset.submitText!;
+  const SENDING_TEXT = section.dataset.sendingText!;
+  const SUCCESS_TEXT = section.dataset.successText!;
+  const ERROR_TEXT = section.dataset.errorText!;
+  const NETWORK_ERROR = section.dataset.networkError!;
+  const LANG = section.dataset.lang!;
 
   interface BookedEvent {
     start: string;
@@ -406,7 +430,7 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Envoi…';
+    submitBtn.textContent = SENDING_TEXT;
 
     try {
       const res = await fetch('/', {
@@ -416,16 +440,16 @@
       });
 
       if (res.ok) {
-        form.innerHTML = '<p class="form-success">Message envoyé ! Nous vous répondrons rapidement.</p>';
+        form.innerHTML = `<p class="form-success">${SUCCESS_TEXT}</p>`;
       } else {
-        submitBtn.textContent = 'Envoyer';
+        submitBtn.textContent = SUBMIT_TEXT;
         submitBtn.disabled = false;
-        form.insertAdjacentHTML('beforeend', '<p class="form-error">Erreur lors de l\'envoi. Réessayez ou contactez-nous directement.</p>');
+        form.insertAdjacentHTML('beforeend', `<p class="form-error">${ERROR_TEXT}</p>`);
       }
     } catch {
-      submitBtn.textContent = 'Envoyer';
+      submitBtn.textContent = SUBMIT_TEXT;
       submitBtn.disabled = false;
-      form.insertAdjacentHTML('beforeend', '<p class="form-error">Erreur de connexion. Réessayez.</p>');
+      form.insertAdjacentHTML('beforeend', `<p class="form-error">${NETWORK_ERROR}</p>`);
     }
   });
 
@@ -436,16 +460,16 @@
   // Message template
   function buildMessage(): string {
     const dateLine = selectedStart && selectedEnd
-      ? `du ${formatDateFR(selectedStart)} au ${formatDateFR(selectedEnd)}`
-      : 'du ........ au ........';
+      ? MSG_DATERANGE.replace('{start}', formatDate(selectedStart)).replace('{end}', formatDate(selectedEnd))
+      : MSG_PLACEHOLDER;
 
-    return `Bonjour,\n\nNous souhaiterions réserver Le Rambert ${dateLine}.\nNous serons .... personnes (dont .... enfants).\n\nMerci !`;
+    return MSG_TEMPLATE.replace('{dates}', dateLine);
   }
 
-  function formatDateFR(dateStr: string): string {
+  function formatDate(dateStr: string): string {
     const [y, m, d] = dateStr.split('-').map(Number);
     const date = new Date(y, m - 1, d);
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    return date.toLocaleDateString(LANG === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   // Init message template
@@ -527,7 +551,7 @@
   }
 
   function render() {
-    navLabel.textContent = `${MONTHS_FR[currentMonth]} ${currentYear}`;
+    navLabel.textContent = `${MONTHS[currentMonth]} ${currentYear}`;
 
     const firstDay = new Date(currentYear, currentMonth, 1);
     const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();

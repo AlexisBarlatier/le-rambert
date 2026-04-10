@@ -6,23 +6,21 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const formData = await request.formData();
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
+  const lang = formData.get('lang')?.toString() || 'fr';
 
   const expectedPassword = import.meta.env.RAMBERT_PASSWORD || 'rambert2026';
+  const prefix = lang === 'en' ? '/en' : '';
 
   if (!email || !password) {
-    return redirect('/#acces-prive');
+    return redirect(`${prefix}/#acces-prive`);
   }
 
   if (password !== expectedPassword) {
-    // TODO: afficher un message d'erreur côté client
-    return redirect('/#acces-prive');
+    return redirect(`${prefix}/#acces-prive`);
   }
 
-  // Logger l'accès (email + timestamp)
-  // TODO: envoyer vers Google Sheet ou stocker dans un fichier
   console.log(`[PRIVATE ACCESS] ${email} — ${new Date().toISOString()}`);
 
-  // Créer un cookie de session (24h)
   cookies.set('rambert_session', email, {
     path: '/',
     maxAge: 60 * 60 * 24,
@@ -31,5 +29,5 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     sameSite: 'lax',
   });
 
-  return redirect('/private');
+  return redirect(`${prefix}/private`);
 };

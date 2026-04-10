@@ -1,4 +1,6 @@
 ---
+import { t, type Lang } from '../i18n/utils';
+
 interface Commodite {
   icon: string;
   label: string;
@@ -6,15 +8,16 @@ interface Commodite {
 }
 interface Props {
   commodites: Commodite[];
+  lang?: Lang;
 }
-const { commodites } = Astro.props;
+const { commodites, lang = 'fr' } = Astro.props;
 ---
 
 <section id="commodites">
   <div class="commodites">
-    <p class="section-tag">Équipements</p>
-    <h2 class="section-title">Tout le <em>confort</em></h2>
-    <p class="section-lead">Pour un séjour sans compromis.</p>
+    <p class="section-tag">{t(lang, 'amenities.tag')}</p>
+    <h2 class="section-title" set:html={t(lang, 'amenities.title')} />
+    <p class="section-lead">{t(lang, 'amenities.lead')}</p>
     <div class="commodites-grid">
       {commodites.map(({ icon, label, detail }) => (
         <div class="commodite" data-animate>

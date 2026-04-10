@@ -1,13 +1,15 @@
 ---
 import fs from 'node:fs';
 import path from 'node:path';
+import { t, type Lang } from '../i18n/utils';
 
 interface Props {
   title: string;
   subtitle: string;
   location: string;
+  lang?: Lang;
 }
-const { title, subtitle, location } = Astro.props;
+const { title, subtitle, location, lang = 'fr' } = Astro.props;
 
 const heroDir = path.resolve('public/photos/hero');
 const heroFiles = fs.existsSync(heroDir)
@@ -22,11 +24,11 @@ const rest = words.join(' ');
 
 <section id="hero" class="hero" style={heroImage ? `background: linear-gradient(180deg, rgba(30,21,16,0.35) 0%, rgba(30,21,16,0.5) 50%, rgba(30,21,16,0.7) 100%), url('${heroImage}') center/cover no-repeat` : undefined}>
   <div class="hero-content">
-    <p class="hero-tag">Location de vacances en Dordogne</p>
+    <p class="hero-tag">{t(lang, 'hero.tag')}</p>
     <h1>{rest} <em>{lastWord}</em></h1>
     <p class="hero-sub">{subtitle}</p>
     <p class="hero-location">{location}</p>
-    <a href="#disponibilites" class="hero-btn">Réserver votre séjour</a>
+    <a href="#disponibilites" class="hero-btn">{t(lang, 'hero.cta')}</a>
   </div>
   <div class="scroll-hint"><span></span></div>
 </section>

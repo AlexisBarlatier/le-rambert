@@ -1,19 +1,22 @@
 ---
+import { t, type Lang } from '../i18n/utils';
+
 interface Activite {
   titre: string;
   items: string[];
 }
 interface Props {
   activites: Activite[];
+  lang?: Lang;
 }
-const { activites } = Astro.props;
+const { activites, lang = 'fr' } = Astro.props;
 ---
 
 <section class="perigord" id="perigord">
   <div class="perigord-inner">
-    <p class="section-tag">À découvrir</p>
-    <h2 class="section-title">Le Périgord <em>Noir</em></h2>
-    <p class="section-lead">Un patrimoine exceptionnel à portée de main.</p>
+    <p class="section-tag">{t(lang, 'activities.tag')}</p>
+    <h2 class="section-title" set:html={t(lang, 'activities.title')} />
+    <p class="section-lead">{t(lang, 'activities.lead')}</p>
     <div class="perigord-cols">
       {activites.map(({ titre, items }) => (
         <div class="perigord-col" data-animate>

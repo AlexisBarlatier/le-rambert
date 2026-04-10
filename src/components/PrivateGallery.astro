@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sizeOf from 'image-size';
+import { t, type Lang } from '../i18n/utils';
 
 interface Photo {
   src: string;
@@ -52,11 +53,16 @@ function optimizeGrid(photos: Photo[]): number {
   return bestCols;
 }
 
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'fr' } = Astro.props;
+
 const sections = [
-  { title: 'Les chambres', photos: listPhotos('chambres') },
-  { title: 'Salles de bain', photos: listPhotos('salles-de-bain') },
-  { title: 'La cuisine', photos: listPhotos('cuisine') },
-  { title: 'Activités', photos: listPhotos('activites') },
+  { title: t(lang, 'privatePage.rooms'), photos: listPhotos('chambres') },
+  { title: t(lang, 'privatePage.bathrooms'), photos: listPhotos('salles-de-bain') },
+  { title: t(lang, 'privatePage.kitchen'), photos: listPhotos('cuisine') },
+  { title: t(lang, 'privatePage.activities'), photos: listPhotos('activites') },
 ];
 const sectionCols = sections.map(s => optimizeGrid(s.photos));
 ---
@@ -74,7 +80,7 @@ const sectionCols = sections.map(s => optimizeGrid(s.photos));
           ))}
         </div>
       ) : (
-        <div class="placeholder">Photos à ajouter</div>
+        <div class="placeholder">{t(lang, 'privatePage.placeholder')}</div>
       )}
     </>
   ))}

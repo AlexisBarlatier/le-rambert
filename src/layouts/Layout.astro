@@ -1,16 +1,18 @@
 ---
 import Lightbox from '../components/Lightbox.astro';
+import { t, type Lang } from '../i18n/utils';
 
 interface Props {
   title: string;
   description?: string;
+  lang?: Lang;
 }
 
-const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Périgord' } = Astro.props;
+const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Périgord', lang = 'fr' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -22,12 +24,15 @@ const { title, description = 'Maison de vacances en Dordogne — Calviac-en-Pér
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <link rel="alternate" hreflang="fr" href="https://locationdordognelerambert.fr/" />
+    <link rel="alternate" hreflang="en" href="https://locationdordognelerambert.fr/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://locationdordognelerambert.fr/" />
   </head>
   <body>
     <slot />
     <Lightbox />
     <footer>
-      <p>La Maison du Rambert — Périgord Noir, Dordogne</p>
+      <p>{t(lang, 'footer.text')}</p>
     </footer>
   </body>
 </html>

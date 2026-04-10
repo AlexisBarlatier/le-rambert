@@ -1,4 +1,6 @@
 ---
+import { t, type Lang } from '../i18n/utils';
+
 interface Tarifs {
   semaine: number;
   nuit: number;
@@ -10,28 +12,29 @@ interface Tarifs {
 }
 interface Props {
   tarifs: Tarifs;
+  lang?: Lang;
 }
-const { tarifs } = Astro.props;
+const { tarifs, lang = 'fr' } = Astro.props;
 
-const formatPrice = (n: number) => n.toLocaleString('fr-FR');
+const formatPrice = (n: number) => n.toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR');
 ---
 
 <section id="tarifs" class="tarifs">
-  <p class="section-tag">Tarifs</p>
-  <h2 class="section-title">Séjournez chez <em>nous</em></h2>
+  <p class="section-tag">{t(lang, 'pricing.tag')}</p>
+  <h2 class="section-title" set:html={t(lang, 'pricing.title')} />
   <div class="tarifs-flex">
     <div class="tarif-block featured" data-animate>
       <div class="tarif-price">{formatPrice(tarifs.semaine)} €</div>
-      <div class="tarif-unit">par semaine</div>
+      <div class="tarif-unit">{t(lang, 'pricing.week')}</div>
     </div>
     <div class="tarif-block" data-animate>
       <div class="tarif-price">{formatPrice(tarifs.nuit)} €</div>
-      <div class="tarif-unit">par nuit</div>
-      <div class="tarif-note">Minimum {tarifs.nuit_minimum} nuits</div>
+      <div class="tarif-unit">{t(lang, 'pricing.night')}</div>
+      <div class="tarif-note">{t(lang, 'pricing.minimum').replace('{n}', String(tarifs.nuit_minimum))}</div>
     </div>
   </div>
   <div class="tarifs-mention">
-    <strong>Forfait ménage obligatoire : {formatPrice(tarifs.menage.prix)} € TTC</strong>
+    <strong set:html={t(lang, 'pricing.cleaning.label').replace('{price}', formatPrice(tarifs.menage.prix))} />
     <p>{tarifs.menage.description}</p>
   </div>
 </section>

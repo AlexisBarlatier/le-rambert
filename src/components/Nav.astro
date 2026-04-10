@@ -1,22 +1,30 @@
 ---
+import { t, type Lang, getLocalizedPath, getAlternateLang } from '../i18n/utils';
+
 interface Props {
   title: string;
+  lang?: Lang;
 }
-const { title } = Astro.props;
+const { title, lang = 'fr' } = Astro.props;
 const [before, last] = [title.split(' ').slice(0, -1).join(' '), title.split(' ').pop()];
 ---
 
 <nav id="nav">
   <div class="nav-brand">{before} <span>{last}</span></div>
   <ul class="nav-links">
-    <li><a href="#espaces">Espaces</a></li>
-    <li><a href="#galerie">Galerie</a></li>
-    <li><a href="#commodites">Équipements</a></li>
-    <li><a href="#perigord">Périgord</a></li>
-    <li><a href="#tarifs">Tarifs</a></li>
-    <li><a href="#disponibilites">Réservation</a></li>
+    <li><a href="#espaces">{t(lang, 'nav.espaces')}</a></li>
+    <li><a href="#galerie">{t(lang, 'nav.galerie')}</a></li>
+    <li><a href="#commodites">{t(lang, 'nav.equipements')}</a></li>
+    <li><a href="#perigord">{t(lang, 'nav.perigord')}</a></li>
+    <li><a href="#tarifs">{t(lang, 'nav.tarifs')}</a></li>
+    <li><a href="#disponibilites">{t(lang, 'nav.reservation')}</a></li>
   </ul>
-  <button class="nav-cta" onclick="document.getElementById('disponibilites').scrollIntoView({behavior:'smooth'})">Réserver</button>
+  <button class="nav-cta" onclick="document.getElementById('disponibilites').scrollIntoView({behavior:'smooth'})">{t(lang, 'nav.cta')}</button>
+  <div class="lang-switch">
+    <a href="/" class:list={[{active: lang === 'fr'}]} onclick="document.cookie='rambert_lang=fr;path=/;max-age=31536000'">FR</a>
+    <span>|</span>
+    <a href="/en/" class:list={[{active: lang === 'en'}]} onclick="document.cookie='rambert_lang=en;path=/;max-age=31536000'">EN</a>
+  </div>
 </nav>
 
 <style>
@@ -102,6 +110,34 @@ const [before, last] = [title.split(' ').slice(0, -1).join(' '), title.split(' '
 
   .nav-cta:hover {
     background: var(--color-gold);
+  }
+
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .lang-switch a {
+    text-decoration: none;
+    color: var(--color-taupe);
+    transition: color 0.3s;
+  }
+
+  .lang-switch a.active {
+    color: var(--color-gold);
+    font-weight: 500;
+  }
+
+  .lang-switch a:hover {
+    color: var(--color-gold);
+  }
+
+  .lang-switch span {
+    color: var(--color-light);
   }
 
   @media (max-width: 768px) {

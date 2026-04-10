@@ -1,4 +1,6 @@
 ---
+import { t, type Lang } from '../i18n/utils';
+
 interface Espace {
   titre: string;
   items: string[];
@@ -12,28 +14,33 @@ interface Props {
   espaces: Espace[];
   chambres: Chambre[];
   salles_de_bain: number;
+  lang?: Lang;
 }
-const { intro, espaces, chambres, salles_de_bain } = Astro.props;
+const { intro, espaces, chambres, salles_de_bain, lang = 'fr' } = Astro.props;
 
 const icons: Record<string, string> = {
   'Pièces de vie': '🏡',
+  'Living areas': '🏡',
   'Terrasses': '☀️',
+  'Terraces': '☀️',
   'Piscine': '💧',
+  'Pool': '💧',
   'Chambres': '🛏️',
+  'Bedrooms': '🛏️',
 };
 ---
 
 <section id="decouvrir" class="intro-section">
-  <p class="section-tag">Bienvenue</p>
+  <p class="section-tag">{t(lang, 'desc.tag')}</p>
   <div class="gold-line"></div>
   <p class="intro-text">{intro}</p>
 </section>
 
 <section id="espaces" class="espaces">
   <div class="espaces-inner">
-    <p class="section-tag">Les espaces</p>
-    <h2 class="section-title">Chaque pièce, <em>une invitation</em></h2>
-    <p class="section-lead">Près de 600 m² pensés pour réunir, partager et se retrouver.</p>
+    <p class="section-tag">{t(lang, 'desc.espaces.tag')}</p>
+    <h2 class="section-title" set:html={t(lang, 'desc.espaces.title')} />
+    <p class="section-lead">{t(lang, 'desc.espaces.lead')}</p>
     <div class="espaces-grid">
       {espaces.map(({ titre, items }) => (
         <div class="espace-card" data-animate>
@@ -46,10 +53,10 @@ const icons: Record<string, string> = {
       ))}
       <div class="espace-card" data-animate>
         <div class="espace-icon">🛏️</div>
-        <h3>Chambres</h3>
+        <h3>{t(lang, 'desc.chambres')}</h3>
         <ul>
           {chambres.map(({ type, nombre }) => <li>{nombre} × {type}</li>)}
-          <li>{salles_de_bain} salles de bain</li>
+          <li>{salles_de_bain} {t(lang, 'desc.bathrooms')}</li>
         </ul>
       </div>
     </div>
