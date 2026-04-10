@@ -1,56 +1,79 @@
 ---
-// Calendrier des disponibilités — 2 mois côte à côte (desktop)
-// Fetch côté client via Netlify Function /api/calendar
+// Section réservation : calendrier + formulaire de contact côte à côte
 ---
 
-<section id="disponibilites" class="calendar" data-animate>
-  <p class="section-tag">Disponibilités</p>
-  <h2 class="section-title">Quand <em>venir</em></h2>
-  <p class="section-lead">Consultez les disponibilités et réservez votre séjour</p>
-
-  <div class="calendar-container">
-    <div class="calendar-nav">
-      <button class="cal-prev" aria-label="Mois précédent">&#8249;</button>
-      <span class="cal-nav-label cal-nav-label--desktop"></span>
-      <span class="cal-nav-label cal-nav-label--mobile"></span>
-      <button class="cal-next" aria-label="Mois suivant">&#8250;</button>
-    </div>
-    <div class="cal-panels">
-      <div class="cal-panel" id="cal-left">
-        <div class="cal-month-label"></div>
-        <div class="cal-header">
-          <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-        </div>
-        <div class="cal-days"></div>
-      </div>
-      <div class="cal-panel" id="cal-right">
-        <div class="cal-month-label"></div>
-        <div class="cal-header">
-          <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
-        </div>
-        <div class="cal-days"></div>
-      </div>
-    </div>
-    <div class="cal-legend">
-      <span class="legend-item"><span class="dot available"></span> Disponible</span>
-      <span class="legend-item"><span class="dot booked"></span> Réservé</span>
-    </div>
+<section id="disponibilites" class="booking" data-animate>
+  <div class="booking-header">
+    <p class="section-tag">Réservation</p>
+    <h2 class="section-title">Disponibilités & <em>contact</em></h2>
+    <p class="section-lead">Consultez les disponibilités et envoyez-nous un message pour réserver</p>
   </div>
 
-  <div class="cal-loading">Chargement du calendrier…</div>
-  <div class="cal-error" hidden>Impossible de charger les disponibilités. Contactez-nous directement.</div>
+  <div class="booking-layout">
+    <!-- Calendrier -->
+    <div class="booking-calendar">
+      <div class="calendar-container">
+        <div class="calendar-nav">
+          <button class="cal-prev" aria-label="Mois précédent">&#8249;</button>
+          <span class="cal-nav-label"></span>
+          <button class="cal-next" aria-label="Mois suivant">&#8250;</button>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-header">
+            <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+          </div>
+          <div class="cal-days"></div>
+        </div>
+        <div class="cal-legend">
+          <span class="legend-item"><span class="dot available"></span> Disponible</span>
+          <span class="legend-item"><span class="dot booked"></span> Réservé</span>
+        </div>
+      </div>
+      <div class="cal-loading">Chargement…</div>
+      <div class="cal-error" hidden>Calendrier indisponible.</div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="booking-form">
+      <h3 class="form-title">Envoyez-nous un message</h3>
+      <form class="contact-form" method="POST" action="/api/contact">
+        <input type="text" name="name" placeholder="Nom" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="text" name="subject" placeholder="Objet" />
+        <textarea name="message" placeholder="Votre message — dates souhaitées, nombre de personnes..." rows="5" required></textarea>
+        <button type="submit">Envoyer</button>
+      </form>
+    </div>
+  </div>
 </section>
 
 <style>
-  .calendar {
+  .booking {
     padding: 6rem 2rem;
     background: var(--color-warm-white);
+  }
+
+  .booking-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .booking-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  /* --- Calendrier --- */
+
+  .booking-calendar {
     text-align: center;
   }
 
   .calendar-container {
-    max-width: 900px;
-    margin: 0 auto;
     display: none;
   }
 
@@ -62,28 +85,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .cal-nav-label {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 400;
     color: var(--color-text);
-    min-width: 200px;
-  }
-
-  .cal-nav-label--mobile {
-    display: none;
+    min-width: 180px;
   }
 
   .cal-prev, .cal-next {
     background: none;
     border: 1px solid var(--color-light);
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.4rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.3rem;
     color: var(--color-accent);
     cursor: pointer;
     transition: all 0.2s;
@@ -95,24 +114,6 @@
   .cal-prev:hover, .cal-next:hover {
     border-color: var(--color-gold);
     color: var(--color-gold);
-  }
-
-  .cal-panels {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-
-  .cal-panel {
-    min-width: 0;
-  }
-
-  .cal-month-label {
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: var(--color-text);
-    margin-bottom: 1rem;
   }
 
   .cal-header {
@@ -177,15 +178,15 @@
   .cal-legend {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
+    gap: 1.5rem;
+    margin-top: 1rem;
   }
 
   .legend-item {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--color-taupe);
   }
 
@@ -206,42 +207,98 @@
   .cal-loading {
     color: var(--color-taupe);
     font-style: italic;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    text-align: center;
   }
 
   .cal-error {
     color: var(--color-accent);
-    font-size: 0.9rem;
-    padding: 2rem;
+    font-size: 0.85rem;
+    padding: 1.5rem;
     background: var(--color-stone);
-    max-width: 480px;
-    margin: 0 auto;
+    text-align: center;
   }
 
+  /* --- Formulaire --- */
+
+  .booking-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 300;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--color-stone);
+    background: white;
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    border-color: var(--color-gold);
+  }
+
+  .contact-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .contact-form button {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    align-self: center;
+    margin-top: 0.5rem;
+  }
+
+  .contact-form button:hover {
+    background: var(--color-gold);
+    color: var(--color-deep);
+  }
+
+  /* --- Mobile --- */
+
   @media (max-width: 768px) {
-    .cal-panels {
+    .booking-layout {
       grid-template-columns: 1fr;
-    }
-
-    .cal-panel:last-child {
-      display: none;
-    }
-
-    .calendar-container {
-      max-width: 100%;
+      gap: 3rem;
     }
 
     :global(.cal-day) {
       font-size: 0.75rem;
     }
 
-    .cal-nav-label--desktop {
-      display: none;
-    }
-
-    .cal-nav-label--mobile {
-      display: inline;
-      font-size: 1.2rem;
+    .cal-nav-label {
+      font-size: 1.1rem;
       min-width: 140px;
     }
   }
@@ -265,11 +322,8 @@
   const container = document.querySelector('.calendar-container') as HTMLElement;
   const loading = document.querySelector('.cal-loading') as HTMLElement;
   const errorEl = document.querySelector('.cal-error') as HTMLElement;
-  const navLabelDesktop = document.querySelector('.cal-nav-label--desktop') as HTMLElement;
-  const navLabelMobile = document.querySelector('.cal-nav-label--mobile') as HTMLElement;
-
-  const leftPanel = document.querySelector('#cal-left') as HTMLElement;
-  const rightPanel = document.querySelector('#cal-right') as HTMLElement;
+  const navLabel = document.querySelector('.cal-nav-label') as HTMLElement;
+  const daysGrid = document.querySelector('.cal-days') as HTMLElement;
 
   const now = new Date();
   currentYear = now.getFullYear();
@@ -293,18 +347,11 @@
     return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
   }
 
-  function nextMonth(y: number, m: number): [number, number] {
-    return m === 11 ? [y + 1, 0] : [y, m + 1];
-  }
+  function render() {
+    navLabel.textContent = `${MONTHS_FR[currentMonth]} ${currentYear}`;
 
-  function renderMonth(panel: HTMLElement, year: number, month: number) {
-    const label = panel.querySelector('.cal-month-label') as HTMLElement;
-    const daysGrid = panel.querySelector('.cal-days') as HTMLElement;
-
-    label.textContent = `${MONTHS_FR[month]} ${year}`;
-
-    const firstDay = new Date(year, month, 1);
-    const totalDays = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     let startDow = firstDay.getDay() - 1;
     if (startDow < 0) startDow = 6;
@@ -317,7 +364,7 @@
     }
 
     for (let d = 1; d <= totalDays; d++) {
-      const dateStr = toDateStr(year, month, d);
+      const dateStr = toDateStr(currentYear, currentMonth, d);
       const isPast = dateStr < todayStr;
       const isToday = dateStr === todayStr;
       const booked = isBooked(dateStr);
@@ -332,14 +379,6 @@
     }
 
     daysGrid.innerHTML = html;
-  }
-
-  function render() {
-    const [nextY, nextM] = nextMonth(currentYear, currentMonth);
-    navLabelDesktop.textContent = `${MONTHS_FR[currentMonth]} — ${MONTHS_FR[nextM]} ${nextY}`;
-    navLabelMobile.textContent = `${MONTHS_FR[currentMonth]} ${currentYear}`;
-    renderMonth(leftPanel, currentYear, currentMonth);
-    renderMonth(rightPanel, nextY, nextM);
   }
 
   async function init() {

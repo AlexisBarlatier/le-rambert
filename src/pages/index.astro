@@ -11,7 +11,7 @@ import Amenities from '../components/Amenities.astro';
 import Activities from '../components/Activities.astro';
 import Pricing from '../components/Pricing.astro';
 import PrivateTeaser from '../components/PrivateTeaser.astro';
-import Contact from '../components/Contact.astro';
+import Booking from '../components/Booking.astro';
 
 const siteFile = fs.readFileSync(path.resolve('src/content/site.md'), 'utf-8');
 const { data: site } = matter(siteFile);
@@ -26,5 +26,5 @@ const { data: site } = matter(siteFile);
   <Activities activites={site.activites} />
   <Pricing tarifs={site.tarifs} />
   <PrivateTeaser />
-  <Contact />
+  <Booking />
 </Layout>
