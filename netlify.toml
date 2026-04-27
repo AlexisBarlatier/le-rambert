@@ -5,4 +5,5 @@
 
 [[edge_functions]]
   function = "lang-redirect"
+  function = "basic-auth"
   path = "/"
